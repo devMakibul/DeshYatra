@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeshYatra – Atmanirbhar Bharat Travel & Tourism Platform</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css" />
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=API_HIDDEN&libraries=places"></script>
+
+    <script src="/js/gtranslate.js"></script>
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                autoDisplay: 'true',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+            }, 'google_translate_element');
+        }
+    </script>
+</head>
+
+<body class="body">
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo-group">
+                <div class="logo-icon-container">
+                    <i data-feather="compass" class="logo-icon"></i>
+                </div>
+                <span class="logo-text">Desh<span class="logo-highlight">Yatra</span></span>
+            </div>
+            <div class="navbar-links">
+                <a href="#" class="navbar-link">Home</a>
+                <a href="#" class="navbar-link">Destinations</a>
+                <a href="#" class="navbar-link">Experiences</a>
+                <a href="#" class="navbar-link">Deals</a>
+                <a href="#" class="navbar-link">About</a>
+            </div>
+            <div class="navbar-actions custom-translate notranslate" id="customTranslateRoot">
+                <button id="translateToggle" class="translate-btn" aria-haspopup="listbox" aria-expanded="false">🌐
+                    <i data-feather="chevron-down" class="language-icon"></i></button>
+
+                <div id="translateDropdown" class="dropdown hidden notranslate" role="dialog"
+                    aria-label="Language selector">
+                    <!-- Current language (filled by JS) -->
+                    <div id="currentLang" class="current-lang" role="status" aria-live="polite">
+                        <div class="current-left">
+                            <div class="tick" aria-hidden="true">✓</div>
+                            <div class="current-text" id="currentText">English (English)</div>
+                        </div>
+                        <div class="current-code" id="currentCode">en</div>
+                    </div>
+
+                    <!-- Search -->
+                    <input id="langSearch" class="search-box" type="search" placeholder="Search language..."
+                        aria-label="Search languages" />
+
+                    <!-- Language list -->
+                    <ul id="langList" class="lang-list" role="listbox" aria-label="Available languages"></ul>
+                </div>
+            </div>
+
+            <!-- Hidden Google Translate element -->
+            <div id="google_translate_element" style="display:none"></div>
+
+            <button class="sign-in-button">Sign In</button>
+            <button class="mobile-menu-button">
+                <i data-feather="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title" data-aos="fade-up">
+                Dream Your Journey<span>,</span><br>We'll Make It Destiny
+            </h1>
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="100">
+                Seamless travel across Bharat: smart recommendations, real-time chat, effortless booking.
+            </p>
+
+            <div class="search-form-container" data-aos="fade-up" data-aos-delay="200">
+                <form action="" id="quickForm" class="search-form-grid">
+                    <input id="boarding" type="text" placeholder="Where do you want to go?" class="search-input">
+                    <input id="destination" type="text" placeholder="From where?" class="search-input">
+                    <input id="date" type="date" class="search-input" placeholder="When?">
+                    <button id="goBtn" class="search-button">
+                        Go
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Smart Travel <span class="cursive-text">Features</span></h2>
+                <p class="section-subtitle">Our AI-powered tools make travel planning effortless and personalized</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon-container saffron-bg">
+                        <i data-feather="dollar-sign" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Budget Planning</h3>
+                    <p class="feature-description">Get personalized budget recommendations based on your travel style
+                        and preferences.
+                    </p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon-container green-bg">
+                        <i data-feather="package" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Luggage Suggestions</h3>
+                    <p class="feature-description">AI recommends what to pack based on destination, season, and trip
+                        duration.</p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon-container blue-bg">
+                        <i data-feather="message-square" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">AI Travel Assistant</h3>
+                    <p class="feature-description">24/7 chatbot support in 27 Indian languages for all your travel
+                        queries.</p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon-container purple-bg">
+                        <i data-feather="home" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Live Chat with Hotels</h3>
+                    <p class="feature-description">Directly message accommodations before booking to clarify all your
+                        questions.</p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon-container pink-bg">
+                        <i data-feather="calendar" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Events Finder</h3>
+                    <p class="feature-description">Discover local festivals and events happening during your travel
+                        dates.</p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon-container yellow-bg">
+                        <i data-feather="shield" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Safety Alerts</h3>
+                    <p class="feature-description">Real-time safety notifications about your destination including
+                        weather and advisories.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="spotlight-section">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Promoting <span class="cursive-text saffron-text">Local</span>, Empowering
+                    <span class="cursive-text green-text">Bharat</span>
+                </h2>
+                <p class="section-subtitle">Discover authentic Indian experiences that support local communities</p>
+            </div>
+
+            <div class="spotlight-grid" data-aos="fade-up">
+                <div class="spotlight-card">
+                    <img src="http://static.photos/travel/640x360/101" alt="Homestay" class="spotlight-image">
+                    <div class="spotlight-content">
+                        <div class="spotlight-card-header">
+                            <div class="spotlight-card-icon saffron-bg">
+                                <i data-feather="home" class="icon-small"></i>
+                            </div>
+                            <span class="spotlight-type">Heritage Homestay</span>
+                        </div>
+                        <h3 class="spotlight-title">Jaipur Haveli Stay</h3>
+                        <p class="spotlight-description">Experience royal hospitality in a 200-year-old mansion</p>
+                        <div class="spotlight-footer">
+                            <span class="spotlight-price">₹2,500/night</span>
+                            <button class="spotlight-button">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="spotlight-card">
+                    <img src="http://static.photos/travel/640x360/102" alt="Tour Guide" class="spotlight-image">
+                    <div class="spotlight-content">
+                        <div class="spotlight-card-header">
+                            <div class="spotlight-card-icon green-bg">
+                                <i data-feather="map" class="icon-small"></i>
+                            </div>
+                            <span class="spotlight-type">Local Guide</span>
+                        </div>
+                        <h3 class="spotlight-title">Kerala Backwaters Tour</h3>
+                        <p class="spotlight-description">Private houseboat experience with a local fisherman guide</p>
+                        <div class="spotlight-footer">
+                            <span class="spotlight-price">₹1,800/person</span>
+                            <button class="spotlight-button">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="spotlight-card">
+                    <img src="http://static.photos/travel/640x360/103" alt="Workshop" class="spotlight-image">
+                    <div class="spotlight-content">
+                        <div class="spotlight-card-header">
+                            <div class="spotlight-card-icon blue-bg">
+                                <i data-feather="tool" class="icon-small"></i>
+                            </div>
+                            <span class="spotlight-type">Artisan Workshop</span>
+                        </div>
+                        <h3 class="spotlight-title">Banarasi Weaving Demo</h3>
+                        <p class="spotlight-description">Learn about traditional silk weaving from master craftsmen</p>
+                        <div class="spotlight-footer">
+                            <span class="spotlight-price">₹500/person</span>
+                            <button class="spotlight-button">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="spotlight-card">
+                    <img src="http://static.photos/travel/640x360/104" alt="Food" class="spotlight-image">
+                    <div class="spotlight-content">
+                        <div class="spotlight-card-header">
+                            <div class="spotlight-card-icon pink-bg">
+                                <i data-feather="coffee" class="icon-small"></i>
+                            </div>
+                            <span class="spotlight-type">Culinary Experience</span>
+                        </div>
+                        <h3 class="spotlight-title">Hyderabadi Dum Biryani Class</h3>
+                        <p class="spotlight-description">Cook with a local family in their home kitchen</p>
+                        <div class="spotlight-footer">
+                            <span class="spotlight-price">₹1,200/person</span>
+                            <button class="spotlight-button">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="spotlight-card">
+                    <img src="http://static.photos/travel/640x360/105" alt="Eco Stay" class="spotlight-image">
+                    <div class="spotlight-content">
+                        <div class="spotlight-card-header">
+                            <div class="spotlight-card-icon green-500-bg">
+                                <i data-feather="leaf" class="icon-small"></i>
+                            </div>
+                            <span class="spotlight-type">Eco Stay</span>
+                        </div>
+                        <h3 class="spotlight-title">Himalayan Mud House</h3>
+                        <p class="spotlight-description">Sustainable stay with panoramic mountain views</p>
+                        <div class="spotlight-footer">
+                            <span class="spotlight-price">₹3,200/night</span>
+                            <button class="spotlight-button">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explore-button-container" data-aos="fade-up">
+                <button class="explore-button">Explore More Local Experiences</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="destinations-section">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Beautiful <span class="cursive-text saffron-text">Places</span> to Visit</h2>
+                <p class="section-subtitle">AI-curated recommendations based on season, budget, and your interests</p>
+            </div>
+
+            <div class="destinations-grid">
+                <div class="destination-card" data-aos="fade-up" data-aos-delay="100">
+                    <img src="http://static.photos/travel/640x360/201" alt="Kashmir" class="destination-image">
+                    <div class="destination-overlay"></div>
+                    <div class="destination-content">
+                        <h3 class="destination-title">Kashmir</h3>
+                        <p class="destination-description">Paradise on Earth with stunning valleys and lakes</p>
+                        <button class="destination-button">Plan with AI</button>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="http://static.photos/travel/640x360/202" alt="Kerala" class="destination-image">
+                    <div class="destination-overlay"></div>
+                    <div class="destination-content">
+                        <h3 class="destination-title">Kerala</h3>
+                        <p class="destination-description">Backwaters, Ayurveda, and lush green landscapes</p>
+                        <button class="destination-button">Plan with AI</button>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="http://static.photos/travel/640x360/203" alt="Rajasthan" class="destination-image">
+                    <div class="destination-overlay"></div>
+                    <div class="destination-content">
+                        <h3 class="destination-title">Rajasthan</h3>
+                        <p class="destination-description">Majestic palaces and golden desert experiences</p>
+                        <button class="destination-button">Plan with AI</button>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-aos="fade-up" data-aos-delay="100">
+                    <img src="http://static.photos/travel/640x360/204" alt="Goa" class="destination-image">
+                    <div class="destination-overlay"></div>
+                    <div class="destination-content">
+                        <h3 class="destination-title">Goa</h3>
+                        <p class="destination-description">Sun-kissed beaches and vibrant nightlife</p>
+                        <button class="destination-button">Plan with AI</button>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="http://static.photos/travel/640x360/205" alt="Himachal" class="destination-image">
+                    <div class="destination-overlay"></div>
+                    <div class="destination-content">
+                        <h3 class="destination-title">Himachal</h3>
+                        <p class="destination-description">Snow-capped peaks and adventure activities</p>
+                        <button class="destination-button">Plan with AI</button>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="http://static.photos/travel/640x360/206" alt="Northeast" class="destination-image">
+                    <div class="destination-overlay"></div>
+                    <div class="destination-content">
+                        <h3 class="destination-title">Northeast</h3>
+                        <p class="destination-description">Unexplored valleys and rich tribal culture</p>
+                        <button class="destination-button">Plan with AI</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explore-all-button-container" data-aos="fade-up">
+                <button class="explore-all-button">Explore All Destinations</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="culture-section">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Indian <span class="cursive-text saffron-text">Culture</span> Showcase</h2>
+                <p class="section-subtitle">Immerse yourself in the rich cultural heritage of India</p>
+            </div>
+
+            <div class="culture-grid">
+                <div class="culture-card" data-aos="fade-up" data-aos-delay="100">
+                    <img src="http://static.photos/travel/640x360/301" alt="Dance" class="culture-image">
+                    <div class="culture-content">
+                        <h3 class="culture-title">Classical Dance</h3>
+                        <p class="culture-description">Kathak, Bharatanatyam, Odissi and more</p>
+                    </div>
+                </div>
+
+                <div class="culture-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="http://static.photos/travel/640x360/302" alt="Music" class="culture-image">
+                    <div class="culture-content">
+                        <h3 class="culture-title">Music Traditions</h3>
+                        <p class="culture-description">From classical ragas to Bollywood beats</p>
+                    </div>
+                </div>
+
+                <div class="culture-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="http://static.photos/travel/640x360/303" alt="Festivals" class="culture-image">
+                    <div class="culture-content">
+                        <h3 class="culture-title">Vibrant Festivals</h3>
+                        <p class="culture-description">Diwali, Holi, Durga Puja, and regional celebrations</p>
+                    </div>
+                </div>
+
+                <div class="culture-card" data-aos="fade-up" data-aos-delay="400">
+                    <img src="http://static.photos/travel/640x360/304" alt="Cuisine" class="culture-image">
+                    <div class="culture-content">
+                        <h3 class="culture-title">Diverse Cuisine</h3>
+                        <p class="culture-description">Regional thalis and street food delights</p>
+                    </div>
+                </div>
+
+                <div class="culture-card" data-aos="fade-up" data-aos-delay="100">
+                    <img src="http://static.photos/travel/640x360/305" alt="Textiles" class="culture-image">
+                    <div class="culture-content">
+                        <h3 class="culture-title">Textile Heritage</h3>
+                        <p class="culture-description">Handlooms, embroidery, and traditional crafts</p>
+                    </div>
+                </div>
+
+                <div class="culture-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="http://static.photos/travel/640x360/306" alt="Architecture" class="culture-image">
+                    <div class="culture-content">
+                        <h3 class="culture-title">Architecture</h3>
+                        <p class="culture-description">From ancient temples to colonial buildings</p>
+                    </div>
+                </div>
+
+                <div class="culture-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="http://static.photos/travel/640x360/307" alt="Yoga" class="culture-image">
+                    <div class="culture-content">
+                        <h3 class="culture-title">Yoga & Wellness</h3>
+                        <p class="culture-description">Ancient practices for modern wellbeing</p>
+                    </div>
+                </div>
+
+                <div class="culture-card" data-aos="fade-up" data-aos-delay="400">
+                    <img src="http://static.photos/travel/640x360/308" alt="Literature" class="culture-image">
+                    <div class="culture-content">
+                        <h3 class="culture-title">Literature</h3>
+                        <p class="culture-description">Epics, poetry, and contemporary works</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="app-cta-section">
+        <div class="section-container">
+            <div class="app-cta-content">
+                <div class="app-cta-text" data-aos="fade-right">
+                    <h2 class="app-cta-title">Desh<span class="cursive-text blue-text">Yatra</span> Mobile App</h2>
+                    <p class="app-cta-subtitle">All the power of our AI travel assistant in your pocket. Plan trips, get
+                        real-time updates, and access your itinerary offline.</p>
+
+                    <div class="app-features-list">
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon blue-bg">
+                                <i data-feather="check" class="icon-small"></i>
+                            </div>
+                            <div>
+                                <h4 class="app-feature-title">Voice Search in 17 Languages</h4>
+                                <p class="app-feature-description">Plan your trip in Hindi, Tamil, Bengali, or other
+                                    Indian languages</p>
+                            </div>
+                        </div>
+
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon blue-bg">
+                                <i data-feather="check" class="icon-small"></i>
+                            </div>
+                            <div>
+                                <h4 class="app-feature-title">Offline Itinerary Access</h4>
+                                <p class="app-feature-description">Your travel plans available even without internet</p>
+                            </div>
+                        </div>
+
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon blue-bg">
+                                <i data-feather="check" class="icon-small"></i>
+                            </div>
+                            <div>
+                                <h4 class="app-feature-title">Exclusive App-Only Deals</h4>
+                                <p class="app-feature-description">Save up to 20% on bookings made through the app</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="app-store-links">
+                        <a href="#" class="app-store-link">
+                            <i data-feather="apple" class="app-store-icon"></i>
+                            <div>
+                                <div class="app-store-text">Download on the</div>
+                                <div class="app-store-name">App Store</div>
+                            </div>
+                        </a>
+                        <a href="#" class="app-store-link">
+                            <i data-feather="play" class="app-store-icon"></i>
+                            <div>
+                                <div class="app-store-text">Get it on</div>
+                                <div class="app-store-name">Google Play</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="app-screenshot-container" data-aos="fade-left">
+                    <div class="app-screenshot-tilt"></div>
+                    <div class="app-screenshot-frame">
+                        <img src="http://static.photos/technology/640x360/401" alt="App Screens"
+                            class="app-screenshot-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter-section">
+        <div class="newsletter-container">
+            <div data-aos="fade-up">
+                <h2 class="newsletter-title">Discover Bharat in Your Inbox</h2>
+                <p class="newsletter-subtitle">Get AI-curated deals, hidden gems, and cultural trip ideas weekly</p>
+
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Your email address" class="newsletter-input">
+                    <button class="newsletter-button">Subscribe</button>
+                </div>
+                <p class="newsletter-disclaimer">We respect your privacy. Unsubscribe at any time.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <div class="footer-logo-group">
+                        <div class="footer-logo-icon">
+                            <i data-feather="compass" class="footer-icon"></i>
+                        </div>
+                        <span class="footer-logo-text">Desh<span class="footer-logo-highlight">Yatra</span></span>
+                    </div>
+                    <p class="footer-tagline">AI-powered travel platform promoting local experiences across India.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i data-feather="facebook"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i data-feather="twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i data-feather="instagram"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i data-feather="youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3 class="footer-heading">Company</h3>
+                    <ul class="footer-list">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="#" class="footer-link">Careers</a></li>
+                        <li><a href="#" class="footer-link">Blog</a></li>
+                        <li><a href="#" class="footer-link">Press</a></li>
+                        <li><a href="#" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3 class="footer-heading">Support</h3>
+                    <ul class="footer-list">
+                        <li><a href="#" class="footer-link">Help Center</a></li>
+                        <li><a href="#" class="footer-link">Safety Information</a></li>
+                        <li><a href="#" class="footer-link">Cancellation Options</a></li>
+                        <li><a href="#" class="footer-link">Report Issue</a></li>
+                        <li><a href="#" class="footer-link">Community Guidelines</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3 class="footer-heading">Legal</h3>
+                    <ul class="footer-list">
+                        <li><a href="#" class="footer-link">Terms of Service</a></li>
+                        <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="#" class="footer-link">Cookie Policy</a></li>
+                        <li><a href="#" class="footer-link">GDPR</a></li>
+                        <li><a href="#" class="footer-link">Atmanirbhar Bharat Initiative</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <p class="copyright-text">© 2025 DeshYatra. All rights reserved.</p>
+                <div class="made-in-india">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png"
+                        alt="India Flag" class="india-flag-icon">
+                    <span class="made-in-india-text">Proudly Made in India</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+
+
+        // Initialize feather icons
+        feather.replace();
+    </script>
+
+    <script src="/main.js"></script>
+</body>
+
+</html>
