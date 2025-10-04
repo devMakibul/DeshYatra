@@ -73,9 +73,11 @@ function initAutocomplete() {
   });
 }
 
-
 // Attach the initialization function to the window load event
 window.addEventListener('load', initAutocomplete);
+
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const checkGoogTeCombo = setInterval(() => {
@@ -225,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultLi = document.createElement('li');
     defaultLi.className = 'default-row';
     defaultLi.setAttribute('role', 'option');
-    defaultLi.innerHTML = `<span class="lang-name"><svg class="reset-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 6V3L8 7l4 4V8c2.8 0 5 2.2 5 5 0 2.8-2.2 5-5 5s-5-2.2-5-5H5c0 4.4 3.6 8 8 8s8-3.6 8-8c0-4.4-3.6-8-8-8z" fill="#666"/></svg>${escapeHtml(defaultLabel)}</span><span class="lang-code">${escapeHtml(pageLang)}</span>`;
+    defaultLi.innerHTML = `<span class="lang-name"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>${escapeHtml(defaultLabel)}</span><span class="lang-code">${escapeHtml(pageLang)}</span>`;
     defaultLi.addEventListener('click', () => {
       resetTranslation(select);
       hideDropdown();
@@ -310,3 +312,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }, 300);
 })();
+
+
+function openPopup() {
+  document.getElementById("loginPopup").style.display = "flex";
+}
+
+function closePopup() {
+  document.getElementById("loginPopup").style.display = "none";
+}
