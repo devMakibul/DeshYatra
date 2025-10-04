@@ -1,0 +1,311 @@
+{
+  "flights": [
+    {
+      "airline": "SkyWings",
+      "flightNumber": "SW101",
+      "departure": "08:30",
+      "arrival": "10:45",
+      "duration": "2h 15m",
+      "price": 8500,
+      "class": "Economy"
+    },
+    {
+      "airline": "AirConnect",
+      "flightNumber": "AC205",
+      "departure": "14:20",
+      "arrival": "16:50",
+      "duration": "2h 30m",
+      "price": 9200,
+      "class": "Economy"
+    },
+    {
+      "airline": "JetStream",
+      "flightNumber": "JS309",
+      "departure": "19:15",
+      "arrival": "21:35",
+      "duration": "2h 20m",
+      "price": 7800,
+      "class": "Economy"
+    }
+  ],
+  "trains": [
+    {
+      "trainName": "Express Shuttle",
+      "trainNumber": "12345",
+      "departure": "06:00",
+      "arrival": "14:30",
+      "duration": "8h 30m",
+      "price": 1200,
+      "class": "AC 3 Tier"
+    },
+    {
+      "trainName": "City Connect",
+      "trainNumber": "67890",
+      "departure": "15:45",
+      "arrival": "23:15",
+      "duration": "7h 30m",
+      "price": 1800,
+      "class": "AC 2 Tier"
+    },
+    {
+      "trainName": "Metro Link",
+      "trainNumber": "11111",
+      "departure": "22:30",
+      "arrival": "07:45",
+      "duration": "9h 15m",
+      "price": 900,
+      "class": "Sleeper"
+    }
+  ],
+  "buses": [
+    {
+      "busOperator": "Comfort Travels",
+      "busNumber": "CT-501",
+      "departure": "22:00",
+      "arrival": "08:30",
+      "duration": "10h 30m",
+      "price": 800,
+      "type": "AC Sleeper"
+    },
+    {
+      "busOperator": "Highway Express",
+      "busNumber": "HE-203",
+      "departure": "08:30",
+      "arrival": "18:00",
+      "duration": "9h 30m",
+      "price": 600,
+      "type": "AC Semi-Sleeper"
+    },
+    {
+      "busOperator": "City Link",
+      "busNumber": "CL-105",
+      "departure": "16:15",
+      "arrival": "02:45",
+      "duration": "10h 30m",
+      "price": 750,
+      "type": "AC Sleeper"
+    }
+  ],
+  "hotels": [
+    {
+      "name": "Grand Plaza Hotel",
+      "rating": 4.5,
+      "price": 3500,
+      "amenities": ["WiFi", "Pool", "Spa", "Restaurant"],
+      "image": "🏨",
+      "location": "City Center"
+    },
+    {
+      "name": "Comfort Inn",
+      "rating": 4.2,
+      "price": 2800,
+      "amenities": ["WiFi", "Restaurant", "Gym"],
+      "image": "🏨",
+      "location": "Business District"
+    },
+    {
+      "name": "Budget Stay",
+      "rating": 3.8,
+      "price": 1500,
+      "amenities": ["WiFi", "24/7 Reception"],
+      "image": "🏨",
+      "location": "Near Airport"
+    },
+    {
+      "name": "Luxury Suites",
+      "rating": 4.8,
+      "price": 5500,
+      "amenities": ["WiFi", "Pool", "Spa", "Restaurant", "Bar", "Concierge"],
+      "image": "🏨",
+      "location": "Premium Area"
+    }
+  ],
+  "touristPlaces": {
+    "mumbai": [
+      {
+        "name": "Gateway of India",
+        "category": "historical",
+        "rating": 4.6,
+        "description": "Iconic monument overlooking the Arabian Sea",
+        "image": "🏛️",
+        "timings": "24 hours",
+        "entryFee": "Free",
+        "duration": "1-2 hours"
+      },
+      {
+        "name": "Marine Drive",
+        "category": "nature",
+        "rating": 4.5,
+        "description": "Beautiful seaside promenade known as Queen's Necklace",
+        "image": "🌊",
+        "timings": "24 hours",
+        "entryFee": "Free",
+        "duration": "1-3 hours"
+      },
+      {
+        "name": "Siddhivinayak Temple",
+        "category": "religious",
+        "rating": 4.7,
+        "description": "Famous Hindu temple dedicated to Lord Ganesha",
+        "image": "🕉️",
+        "timings": "5:30 AM - 10:00 PM",
+        "entryFee": "Free",
+        "duration": "1-2 hours"
+      },
+      {
+        "name": "Juhu Beach",
+        "category": "nature",
+        "rating": 4.2,
+        "description": "Popular beach with street food and sunset views",
+        "image": "🏖️",
+        "timings": "24 hours",
+        "entryFee": "Free",
+        "duration": "2-4 hours"
+      },
+      {
+        "name": "Bollywood Studios",
+        "category": "entertainment",
+        "rating": 4.4,
+        "description": "Film city tours and Bollywood experience",
+        "image": "🎬",
+        "timings": "9:00 AM - 6:00 PM",
+        "entryFee": "₹500-1500",
+        "duration": "4-6 hours"
+      },
+      {
+        "name": "Elephanta Caves",
+        "category": "historical",
+        "rating": 4.3,
+        "description": "Ancient rock-cut caves and sculptures",
+        "image": "⛰️",
+        "timings": "9:00 AM - 5:00 PM",
+        "entryFee": "₹40",
+        "duration": "4-5 hours"
+      }
+    ],
+    "delhi": [
+      {
+        "name": "Red Fort",
+        "category": "historical",
+        "rating": 4.5,
+        "description": "UNESCO World Heritage Mughal fortress",
+        "image": "🏰",
+        "timings": "9:30 AM - 4:30 PM",
+        "entryFee": "₹50",
+        "duration": "2-3 hours"
+      },
+      {
+        "name": "India Gate",
+        "category": "historical",
+        "rating": 4.6,
+        "description": "War memorial and iconic landmark",
+        "image": "🏛️",
+        "timings": "24 hours",
+        "entryFee": "Free",
+        "duration": "1-2 hours"
+      },
+      {
+        "name": "Lotus Temple",
+        "category": "religious",
+        "rating": 4.7,
+        "description": "Beautiful Bahai temple shaped like lotus",
+        "image": "🪷",
+        "timings": "9:00 AM - 5:30 PM",
+        "entryFee": "Free",
+        "duration": "1-2 hours"
+      },
+      {
+        "name": "Lodhi Gardens",
+        "category": "nature",
+        "rating": 4.4,
+        "description": "Beautiful gardens with historical tombs",
+        "image": "🌳",
+        "timings": "5:00 AM - 8:00 PM",
+        "entryFee": "Free",
+        "duration": "2-3 hours"
+      },
+      {
+        "name": "Kingdom of Dreams",
+        "category": "entertainment",
+        "rating": 4.3,
+        "description": "Live entertainment and cultural shows",
+        "image": "🎭",
+        "timings": "12:00 PM - 10:00 PM",
+        "entryFee": "₹800-2500",
+        "duration": "3-4 hours"
+      },
+      {
+        "name": "Humayun's Tomb",
+        "category": "historical",
+        "rating": 4.4,
+        "description": "Magnificent Mughal architecture and gardens",
+        "image": "🕌",
+        "timings": "6:00 AM - 6:00 PM",
+        "entryFee": "₹50",
+        "duration": "2-3 hours"
+      }
+    ],
+    "default": [
+      {
+        "name": "City Center",
+        "category": "historical",
+        "rating": 4.2,
+        "description": "Historic downtown area with local attractions",
+        "image": "🏙️",
+        "timings": "24 hours",
+        "entryFee": "Free",
+        "duration": "2-3 hours"
+      },
+      {
+        "name": "Local Temple",
+        "category": "religious",
+        "rating": 4.5,
+        "description": "Beautiful local temple with cultural significance",
+        "image": "🕉️",
+        "timings": "6:00 AM - 8:00 PM",
+        "entryFee": "Free",
+        "duration": "1-2 hours"
+      },
+      {
+        "name": "City Park",
+        "category": "nature",
+        "rating": 4.3,
+        "description": "Green space perfect for relaxation and walks",
+        "image": "🌳",
+        "timings": "5:00 AM - 9:00 PM",
+        "entryFee": "Free",
+        "duration": "1-3 hours"
+      },
+      {
+        "name": "Local Market",
+        "category": "entertainment",
+        "rating": 4.1,
+        "description": "Vibrant local market with shopping and food",
+        "image": "🛒",
+        "timings": "9:00 AM - 9:00 PM",
+        "entryFee": "Free",
+        "duration": "2-4 hours"
+      },
+      {
+        "name": "Heritage Museum",
+        "category": "historical",
+        "rating": 4.4,
+        "description": "Local history and cultural artifacts",
+        "image": "🏛️",
+        "timings": "10:00 AM - 5:00 PM",
+        "entryFee": "₹20-50",
+        "duration": "2-3 hours"
+      },
+      {
+        "name": "Scenic Viewpoint",
+        "category": "nature",
+        "rating": 4.6,
+        "description": "Beautiful panoramic views of the city",
+        "image": "🏔️",
+        "timings": "24 hours",
+        "entryFee": "Free",
+        "duration": "1-2 hours"
+      }
+    ]
+  }
+}
