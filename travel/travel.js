@@ -624,7 +624,7 @@ async function getTravelSuggestions() {
   eventsList.innerHTML = '';
 
   try {
-    const response = await fetch('http://localhost:3000/api/travel-suggestions', {
+    const response = await fetch('https://deshyatra.vercel.app/api/travel-suggestions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ destination, month, date }),
@@ -708,7 +708,7 @@ async function sendMessage() {
   chatHistory.scrollTop = chatHistory.scrollHeight;
 
   try {
-    const response = await fetch('http://localhost:3000/api/chat', {
+    const response = await fetch('https://deshyatra.vercel.app/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ from, to, date, messages: conversationHistory }),
@@ -767,7 +767,7 @@ async function getTripPlan() {
   tripPlanContent.innerHTML = '<div>Loading your personalized plan...</div>';
 
   try {
-    const response = await fetch('http://localhost:3000/api/trip-planner', {
+    const response = await fetch('https://deshyatra.vercel.app/api/trip-planner', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ from, to, date, budget, adults, children }),
