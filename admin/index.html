@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DeshYatra Admin — Dashboard</title>
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* subtle custom styling */
+    .sidebar-gradient {
+      background: linear-gradient(180deg, rgba(99,102,241,0.06), rgba(14,165,233,0.03));
+    }
+    .card-glow {
+      box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+    }
+    .status-pill {
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+    }
+    /* small scrollbar style */
+    .thin-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
+    .thin-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 999px; }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+  <div class="min-h-screen flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-72 border-r bg-white sidebar-gradient">
+      <div class="p-6">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">DY</div>
+          <div>
+            <div class="font-bold text-lg">DeshYatra</div>
+            <div class="text-xs text-gray-500">Admin panel</div>
+          </div>
+        </div>
+
+        <nav class="mt-8">
+          <ul class="space-y-1" id="menuList">
+            <!-- Menu items will be injected -->
+          </ul>
+        </nav>
+
+        <div class="mt-6">
+          <div class="text-xs text-gray-500">Quick Stats</div>
+          <div class="mt-2 flex gap-2">
+            <div class="flex-1 bg-white p-3 rounded-lg card-glow">
+              <div class="text-xs text-gray-500">Bookings</div>
+              <div id="quickBookings" class="font-bold text-lg">—</div>
+            </div>
+            <div class="flex-1 bg-white p-3 rounded-lg card-glow">
+              <div class="text-xs text-gray-500">Revenue</div>
+              <div id="quickRevenue" class="font-bold text-lg">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 mt-auto pb-6">
+        <div class="text-xs text-gray-500">Logged in as</div>
+        <div class="mt-2 flex items-center gap-3">
+          <img src="https://avatars.dicebear.com/api/initials/P.svg" class="w-9 h-9 rounded-full bg-indigo-50" alt="avatar" />
+          <div>
+            <div class="font-medium">Priya Sharma</div>
+            <div class="text-xs text-gray-500">Admin</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 p-6">
+      <!-- Top bar -->
+      <header class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-4">
+          <button id="menuToggle" class="md:hidden p-2 rounded-md hover:bg-gray-100">
+            <!-- menu svg -->
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <h1 id="pageTitle" class="text-2xl font-semibold">Dashboard</h1>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <input id="globalSearch" class="border rounded-lg px-3 py-2 w-80" placeholder="Search bookings, customers, messages..." />
+            <div id="searchHint" class="absolute right-3 top-2 text-xs text-gray-400">/</div>
+          </div>
+
+          <button id="notifBtn" class="p-2 rounded-md hover:bg-gray-100 relative">
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+            <span id="notifDot" class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full px-1 text-xs">3</span>
+          </button>
+
+          <div class="flex items-center gap-2">
+            <img src="https://avatars.dicebear.com/api/micah/Priya.svg" alt="avatar" class="w-10 h-10 rounded-full" />
+          </div>
+        </div>
+      </header>
+
+      <!-- Content area -->
+      <section id="contentArea" class="space-y-6">
+        <!-- Views will be injected here -->
+      </section>
+    </main>
+  </div>
+
+  <template id="menuItemTemplate">
+    <li>
+      <button data-id="" class="menu-item w-full flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 text-left">
+        <span class="w-5 h-5 flex items-center justify-center"></span>
+        <span class="menu-label"></span>
+        <span class="ml-auto text-xs text-gray-400 menu-badge"></span>
+      </button>
+    </li>
+  </template>
+
+  <!-- Templates for pages -->
+  <template id="dashboardTemplate">
+    <div id="dashboardView" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white p-4 rounded-lg card-glow">
+          <div class="text-sm text-gray-500">Total Bookings</div>
+          <div id="kpiTotalBookings" class="text-2xl font-bold mt-2">—</div>
+          <div class="text-xs text-gray-400 mt-1">Last 30 days</div>
+        </div>
+        <div class="bg-white p-4 rounded-lg card-glow">
+          <div class="text-sm text-gray-500">New Customers</div>
+          <div id="kpiNewCustomers" class="text-2xl font-bold mt-2">—</div>
+          <div class="text-xs text-gray-400 mt-1">Last 30 days</div>
+        </div>
+        <div class="bg-white p-4 rounded-lg card-glow">
+          <div class="text-sm text-gray-500">Revenue (₹)</div>
+          <div id="kpiRevenue" class="text-2xl font-bold mt-2">—</div>
+          <div class="text-xs text-gray-400 mt-1">Month-to-date</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="lg:col-span-2 bg-white p-4 rounded-lg card-glow">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-semibold">Bookings Trend</div>
+              <div class="text-xs text-gray-400">Daily bookings over the last 30 days</div>
+            </div>
+            <div class="text-xs text-gray-500">Indian Standard Time</div>
+          </div>
+          <canvas id="bookingsChart" class="mt-4" height="120"></canvas>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg card-glow">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-semibold">Revenue Summary</div>
+              <div class="text-xs text-gray-400">This month</div>
+            </div>
+            <button id="downloadReportBtn" class="text-sm px-3 py-1 border rounded-md">Generate report</button>
+          </div>
+          <canvas id="revenueChart" class="mt-4" height="140"></canvas>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white p-4 rounded-lg">
+          <div class="font-semibold mb-2">Recent Bookings</div>
+          <ul id="recentBookings" class="space-y-3 thin-scroll max-h-48 overflow-auto pr-2"></ul>
+        </div>
+        <div class="bg-white p-4 rounded-lg">
+          <div class="font-semibold mb-2">Recent Messages</div>
+          <ul id="recentMessages" class="space-y-3 thin-scroll max-h-48 overflow-auto pr-2"></ul>
+        </div>
+        <div class="bg-white p-4 rounded-lg">
+          <div class="font-semibold mb-2">Notifications</div>
+          <ul id="recentNotifs" class="space-y-3 thin-scroll max-h-48 overflow-auto pr-2"></ul>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="bookingsTemplate">
+    <div id="bookingsView" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-semibold">Bookings</h2>
+          <div class="text-sm text-gray-500">Manage hotel & transport bookings</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="bookingTypeFilter" class="border rounded-lg px-3 py-2">
+            <option value="all">All types</option>
+            <option value="hotel">Hotel</option>
+            <option value="transport">Transport</option>
+          </select>
+          <select id="bookingStatusFilter" class="border rounded-lg px-3 py-2">
+            <option value="all">All statuses</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="pending">Pending</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input id="bookingSearch" placeholder="Search ID or customer" class="border rounded-lg px-3 py-2" />
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg p-4 card-glow overflow-auto">
+        <table id="bookingsTable" class="min-w-full text-left">
+          <thead>
+            <tr class="text-sm text-gray-500">
+              <th class="cursor-pointer px-3 py-2" data-key="id">Booking ID ▲</th>
+              <th class="cursor-pointer px-3 py-2" data-key="name">Customer</th>
+              <th class="cursor-pointer px-3 py-2" data-key="date">Date</th>
+              <th class="cursor-pointer px-3 py-2" data-key="type">Type</th>
+              <th class="cursor-pointer px-3 py-2" data-key="status">Status</th>
+              <th class="cursor-pointer px-3 py-2" data-key="cost">Total (₹)</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsTbody" class="text-sm"></tbody>
+        </table>
+      </div>
+    </div>
+  </template>
+
+  <template id="customersTemplate">
+    <div id="customersView" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-semibold">Customers</h2>
+          <div class="text-sm text-gray-500">Customer records and profiles</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="customerCityFilter" class="border rounded-lg px-3 py-2">
+            <option value="all">All cities</option>
+            <option>Delhi</option>
+            <option>Mumbai</option>
+            <option>Jaipur</option>
+            <option>Goa</option>
+            <option>Udaipur</option>
+            <option>Ahmedabad</option>
+          </select>
+          <input id="customerSearch" placeholder="Search name or email" class="border rounded-lg px-3 py-2" />
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg p-4 card-glow overflow-auto">
+        <table id="customersTable" class="min-w-full text-left">
+          <thead>
+            <tr class="text-sm text-gray-500">
+              <th class="px-3 py-2" data-key="name">Name</th>
+              <th class="px-3 py-2" data-key="email">Email</th>
+              <th class="px-3 py-2" data-key="phone">Phone</th>
+              <th class="px-3 py-2" data-key="city">City</th>
+              <th class="px-3 py-2">Profile</th>
+            </tr>
+          </thead>
+          <tbody id="customersTbody" class="text-sm"></tbody>
+        </table>
+      </div>
+    </div>
+  </template>
+
+  <template id="messagesTemplate">
+    <div id="messagesView" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="col-span-1 bg-white rounded-lg p-4 card-glow">
+        <div class="font-semibold mb-3">Messages</div>
+        <input id="messageSearch" placeholder="Search subject or sender" class="border rounded-lg px-3 py-2 w-full mb-3" />
+        <ul id="messageList" class="space-y-2 max-h-[60vh] overflow-auto thin-scroll"></ul>
+      </div>
+
+      <div class="lg:col-span-2 bg-white rounded-lg p-4 card-glow flex flex-col">
+        <div id="messageThreadContainer" class="flex-1 overflow-auto thin-scroll p-2">
+          <div id="msgPlaceholder" class="text-center text-gray-400 mt-12">Select a message to view conversation</div>
+        </div>
+
+        <div class="mt-4">
+          <div class="flex gap-2">
+            <input id="replyInput" placeholder="Type a reply..." class="flex-1 border rounded-lg px-3 py-2" />
+            <button id="sendReplyBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="hotelsTemplate">
+    <div id="hotelsView" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-semibold">Hotels Management</h2>
+          <div class="text-sm text-gray-500">Add, edit or remove hotels</div>
+        </div>
+        <div>
+          <button id="addHotelBtn" class="px-4 py-2 bg-green-600 text-white rounded-lg">Add hotel</button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg p-4 card-glow overflow-auto">
+        <table id="hotelsTable" class="min-w-full text-left">
+          <thead>
+            <tr class="text-sm text-gray-500">
+              <th class="px-3 py-2">Hotel</th>
+              <th class="px-3 py-2">Location</th>
+              <th class="px-3 py-2">Rating</th>
+              <th class="px-3 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="hotelsTbody" class="text-sm"></tbody>
+        </table>
+      </div>
+    </div>
+  </template>
+
+  <template id="paymentsTemplate">
+    <div id="paymentsView" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-semibold">Payments</h2>
+          <div class="text-sm text-gray-500">Transaction log</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="txStatusFilter" class="border rounded-lg px-3 py-2">
+            <option value="all">All</option>
+            <option value="success">Success</option>
+            <option value="failed">Failed</option>
+            <option value="refund">Refund</option>
+          </select>
+          <input id="txSearch" placeholder="Search txn id or customer" class="border rounded-lg px-3 py-2" />
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg p-4 card-glow overflow-auto">
+        <table id="paymentsTable" class="min-w-full text-left">
+          <thead>
+            <tr class="text-sm text-gray-500">
+              <th class="px-3 py-2">Txn ID</th>
+              <th class="px-3 py-2">Customer</th>
+              <th class="px-3 py-2">Amount (₹)</th>
+              <th class="px-3 py-2">Date</th>
+              <th class="px-3 py-2">Status</th>
+            </tr>
+          </thead>
+          <tbody id="paymentsTbody" class="text-sm"></tbody>
+        </table>
+      </div>
+    </div>
+  </template>
+
+  <template id="analyticsTemplate">
+    <div id="analyticsView" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-semibold">Analytics & Reports</h2>
+          <div class="text-sm text-gray-500">Trends and downloadable reports</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="analyticsRange" class="border rounded-lg px-3 py-2">
+            <option value="30">Last 30 days</option>
+            <option value="90">Last 90 days</option>
+            <option value="365">Last year</option>
+          </select>
+          <button id="downloadAnalyticsBtn" class="px-3 py-2 border rounded-lg">Download CSV</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="bg-white p-4 rounded-lg card-glow">
+          <div class="font-semibold">Bookings by Day</div>
+          <canvas id="analyticsBookingsChart" class="mt-3" height="140"></canvas>
+        </div>
+        <div class="bg-white p-4 rounded-lg card-glow">
+          <div class="font-semibold">Revenue by Day (₹)</div>
+          <canvas id="analyticsRevenueChart" class="mt-3" height="140"></canvas>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="feedbackTemplate">
+    <div id="feedbackView" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-semibold">Customer Feedback</h2>
+          <div class="text-sm text-gray-500">View and reply to feedback</div>
+        </div>
+        <div>
+          <input id="feedbackSearch" placeholder="Search feedback..." class="border rounded-lg px-3 py-2" />
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg card-glow">
+        <ul id="feedbackList" class="space-y-4"></ul>
+      </div>
+    </div>
+  </template>
+
+  <template id="settingsTemplate">
+    <div id="settingsView" class="space-y-4">
+      <h2 class="text-xl font-semibold">Settings</h2>
+      <div class="bg-white p-4 rounded-lg card-glow grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div class="text-sm text-gray-500">Profile</div>
+          <input id="settingName" class="border rounded-lg px-3 py-2 w-full mt-2" placeholder="Full name" />
+          <input id="settingEmail" class="border rounded-lg px-3 py-2 w-full mt-2" placeholder="Email" />
+          <button id="saveProfileBtn" class="mt-3 px-4 py-2 bg-indigo-600 text-white rounded-lg">Save Profile</button>
+        </div>
+        <div>
+          <div class="text-sm text-gray-500">Password</div>
+          <input id="settingOldPass" type="password" class="border rounded-lg px-3 py-2 w-full mt-2" placeholder="Old password" />
+          <input id="settingNewPass" type="password" class="border rounded-lg px-3 py-2 w-full mt-2" placeholder="New password" />
+          <button id="changePassBtn" class="mt-3 px-4 py-2 bg-yellow-500 text-white rounded-lg">Change Password</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="notificationsTemplate">
+    <div id="notificationsView" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold">Notifications</h2>
+        <div>
+          <button id="markAllReadBtn" class="px-3 py-2 border rounded-lg">Mark all read</button>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg card-glow">
+        <ul id="notificationsList" class="space-y-3"></ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- Modal placeholders -->
+  <div id="modalRoot"></div>
+
+  <script>
+    /* ---------------------------
+       Sample realistic Indian data
+       --------------------------- */
+    const sampleCustomers = [
+      { id: 'CUST-001', name: 'Aarav Singh', email: 'aarav.singh@gmail.com', phone: '+91 98765 43210', city: 'Delhi', joined: '2024-08-12' },
+      { id: 'CUST-002', name: 'Priya Sharma', email: 'priya.sharma@example.com', phone: '+91 91234 56789', city: 'Mumbai', joined: '2025-02-03' },
+      { id: 'CUST-003', name: 'Rohan Mehta', email: 'rohan.mehta@yahoo.com', phone: '+91 99876 54321', city: 'Jaipur', joined: '2025-03-15' },
+      { id: 'CUST-004', name: 'Sana Khan', email: 'sana.khan@domain.com', phone: '+91 94567 12345', city: 'Goa', joined: '2024-12-01' },
+      { id: 'CUST-005', name: 'Vikram Patel', email: 'vikram.patel@outlook.com', phone: '+91 90123 45678', city: 'Ahmedabad', joined: '2025-06-20' },
+      { id: 'CUST-006', name: 'Neha Iyer', email: 'neha.iyer@gmail.com', phone: '+91 93456 78901', city: 'Udaipur', joined: '2025-08-05' },
+    ];
+
+    const sampleBookings = [
+      { id: 'BK-20250901-001', name: 'Aarav Singh', date: '2025-09-04', status: 'confirmed', type: 'hotel', cost: 8420, hotel: 'The Royal Haveli, Jaipur' },
+      { id: 'BK-20250828-002', name: 'Priya Sharma', date: '2025-09-02', status: 'pending', type: 'transport', cost: 1200, hotel: null },
+      { id: 'BK-20250822-003', name: 'Rohan Mehta', date: '2025-08-30', status: 'confirmed', type: 'hotel', cost: 5600, hotel: 'Sea Breeze Resort, Goa' },
+      { id: 'BK-20250715-004', name: 'Sana Khan', date: '2025-07-20', status: 'cancelled', type: 'hotel', cost: 0, hotel: 'Hilltop Inn, Udaipur' },
+      { id: 'BK-20250905-005', name: 'Vikram Patel', date: '2025-09-12', status: 'confirmed', type: 'transport', cost: 2400, hotel: null },
+      { id: 'BK-20250811-006', name: 'Neha Iyer', date: '2025-08-18', status: 'confirmed', type: 'hotel', cost: 10999, hotel: 'Lakeside Palace, Udaipur' },
+      { id: 'BK-20250630-007', name: 'Aarav Singh', date: '2025-07-05', status: 'confirmed', type: 'transport', cost: 1600, hotel: null },
+    ];
+
+    const sampleMessages = [
+      { id: 'MSG-001', subject: 'Query about room availability', sender: 'Aarav Singh', time: '2025-09-01 08:14', thread: [
+        { from: 'Aarav Singh', text: 'Hi, is the Sea Breeze Resort available on Sep 15-17?', time: '2025-09-01 08:14' },
+        { from: 'Support', text: 'Hello Aarav — yes we have Deluxe and Superior rooms available.', time: '2025-09-01 08:20' },
+      ]},
+      { id: 'MSG-002', subject: 'Refund request', sender: 'Sana Khan', time: '2025-07-21 10:05', thread: [
+        { from: 'Sana Khan', text: 'I need to request a refund for booking BK-20250715-004', time: '2025-07-21 10:05' },
+      ]},
+      { id: 'MSG-003', subject: 'Transport pickup time', sender: 'Vikram Patel', time: '2025-09-05 16:30', thread: [
+        { from: 'Vikram Patel', text: 'Please confirm pickup at 9:00 AM from Ahmedabad airport.', time: '2025-09-05 16:30' },
+      ]},
+    ];
+
+    const sampleHotels = [
+      { id: 'H-001', name: 'The Royal Haveli', location: 'Jaipur', rating: 4.6 },
+      { id: 'H-002', name: 'Sea Breeze Resort', location: 'Goa', rating: 4.4 },
+      { id: 'H-003', name: 'Lakeside Palace', location: 'Udaipur', rating: 4.8 },
+      { id: 'H-004', name: 'Hilltop Inn', location: 'Udaipur', rating: 4.1 },
+    ];
+
+    const samplePayments = [
+      { id: 'TXN-20250901-1001', customer: 'Aarav Singh', amount: 8420, date: '2025-09-01', status: 'success' },
+      { id: 'TXN-20250828-1002', customer: 'Priya Sharma', amount: 1200, date: '2025-08-28', status: 'pending' },
+      { id: 'TXN-20250822-1003', customer: 'Rohan Mehta', amount: 5600, date: '2025-08-22', status: 'success' },
+      { id: 'TXN-20250715-1004', customer: 'Sana Khan', amount: 0, date: '2025-07-15', status: 'refund' },
+      { id: 'TXN-20250905-1005', customer: 'Vikram Patel', amount: 2400, date: '2025-09-05', status: 'success' },
+    ];
+
+    const sampleFeedback = [
+      { id: 'FB-001', name: 'Aarav Singh', rating: 5, comment: 'Amazing stay at Lakeside Palace — staff were very helpful.', time: '2025-08-20', replies: [] },
+      { id: 'FB-002', name: 'Neha Iyer', rating: 4, comment: 'Good experience but breakfast could be better.', time: '2025-08-19', replies: [] },
+      { id: 'FB-003', name: 'Priya Sharma', rating: 3, comment: 'Transport was delayed which impacted itinerary.', time: '2025-09-03', replies: [] },
+    ];
+
+    const sampleNotifications = [
+      { id: 'N-001', text: 'New booking BK-20250901-001 by Aarav Singh', time: '2025-09-01 08:15' },
+      { id: 'N-002', text: 'Message from Sana Khan', time: '2025-07-21 10:05' },
+      { id: 'N-003', text: 'Payment TXN-20250905-1005 succeeded', time: '2025-09-05 16:40' },
+    ];
+
+    /* ---------------------------
+       Menu & routing
+       --------------------------- */
+    const pages = [
+      { id: 'dashboard', label: 'Dashboard', badge: '' },
+      { id: 'bookings', label: 'Bookings', badge: '' },
+      { id: 'customers', label: 'Customers', badge: '' },
+      { id: 'messages', label: 'Messages', badge: sampleMessages.length },
+      { id: 'hotels', label: 'Hotels', badge: '' },
+      { id: 'payments', label: 'Payments', badge: '' },
+      { id: 'analytics', label: 'Analytics & Reports', badge: '' },
+      { id: 'feedback', label: 'Feedback', badge: '' },
+      { id: 'settings', label: 'Settings', badge: '' },
+      { id: 'notifications', label: 'Notifications', badge: sampleNotifications.length },
+    ];
+
+    const menuListEl = document.getElementById('menuList');
+    const menuTpl = document.getElementById('menuItemTemplate');
+
+    pages.forEach(p => {
+      const clone = menuTpl.content.cloneNode(true);
+      const btn = clone.querySelector('button');
+      btn.dataset.id = p.id;
+      clone.querySelector('.menu-label').innerText = p.label;
+      const iconSpan = clone.querySelector('span.w-5');
+      // simple icon placeholders
+      iconSpan.innerHTML = {
+        dashboard: '<svg class="w-4 h-4 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="14" width="7" height="7"/></svg>',
+        bookings: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7h18M5 7v13a2 2 0 002 2h10a2 2 0 002-2V7"/></svg>',
+        customers: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>',
+        messages: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>',
+        hotels: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18M4 7h16v14H4z"/></svg>',
+        payments: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M7 8h.01M7 12h.01"/></svg>',
+        analytics: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/></svg>',
+        feedback: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>',
+        settings: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.82 2.82l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06A2 2 0 014.3 17.88l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82L4.3 4.3A2 2 0 017.12 1.48l.06.06A1.65 1.65 0 009 1.87 1.65 1.65 0 0010.51 1H11a2 2 0 014 0h.09a1.65 1.65 0 001.51 1 1.65 1.65 0 001.82-.33l.06-.06A2 2 0 0019.7 4.12l-.06.06a1.65 1.65 0 00-.33 1.82 1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
+        notifications: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22a2 2 0 002-2H10a2 2 0 002 2z"/><path d="M18 8a6 6 0 10-12 0v5l-2 2h16l-2-2V8z"/></svg>',
+      }[p.id] || '';
+
+      clone.querySelector('.menu-badge').innerText = p.badge || '';
+      menuListEl.appendChild(clone);
+    });
+
+    // add click listeners
+    document.querySelectorAll('.menu-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        navigateTo(id);
+      });
+    });
+
+    // mobile toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('hidden');
+    });
+
+    // App state
+    const contentArea = document.getElementById('contentArea');
+    const pageTitleEl = document.getElementById('pageTitle');
+    let currentPage = 'dashboard';
+
+    // Render initial content
+    navigateTo('dashboard');
+
+    /* ---------------------------
+       Page renderers
+       --------------------------- */
+
+    function navigateTo(pageId) {
+      currentPage = pageId;
+      // update title
+      const label = pages.find(p => p.id === pageId)?.label || pageId;
+      pageTitleEl.innerText = label;
+
+      // highlight active menu
+      document.querySelectorAll('.menu-item').forEach(b => {
+        if (b.dataset.id === pageId) {
+          b.classList.add('bg-indigo-50');
+        } else {
+          b.classList.remove('bg-indigo-50');
+        }
+      });
+
+      // clear content and render template
+      contentArea.innerHTML = '';
+      const tpl = document.getElementById(pageId + 'Template');
+      if (!tpl) {
+        contentArea.innerHTML = '<div class="bg-white p-6 rounded-lg">Page not implemented</div>';
+        return;
+      }
+      const clone = tpl.content.cloneNode(true);
+      contentArea.appendChild(clone);
+
+      // call page-specific setup
+      const setupFn = {
+        dashboard: setupDashboard,
+        bookings: setupBookings,
+        customers: setupCustomers,
+        messages: setupMessages,
+        hotels: setupHotels,
+        payments: setupPayments,
+        analytics: setupAnalytics,
+        feedback: setupFeedback,
+        settings: setupSettings,
+        notifications: setupNotifications,
+      }[pageId];
+
+      if (setupFn) setupFn();
+    }
+
+    /* ---------------------------
+       Utilities
+       --------------------------- */
+    function formatINR(val) {
+      return '₹' + Number(val).toLocaleString('en-IN');
+    }
+
+    function downloadCSV(filename, rows) {
+      const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    /* ---------------------------
+       Dashboard
+       --------------------------- */
+    function setupDashboard() {
+      // KPIs
+      const totalBookings = sampleBookings.length;
+      const newCustomers = sampleCustomers.filter(c => {
+        const d = new Date(c.joined);
+        const days = (Date.now() - d) / (1000 * 60 * 60 * 24);
+        return days <= 30;
+      }).length;
+      const revenue = samplePayments.reduce((s, t) => s + (t.amount || 0), 0);
+
+      document.getElementById('kpiTotalBookings').innerText = totalBookings;
+      document.getElementById('kpiNewCustomers').innerText = newCustomers;
+      document.getElementById('kpiRevenue').innerText = formatINR(revenue);
+
+      // quick stats in sidebar
+      document.getElementById('quickBookings').innerText = totalBookings;
+      document.getElementById('quickRevenue').innerText = formatINR(revenue);
+
+      // Recent lists
+      const recentBookingsEl = document.getElementById('recentBookings');
+      recentBookingsEl.innerHTML = '';
+      sampleBookings.slice(0,5).forEach(b => {
+        const li = document.createElement('li');
+        li.className = 'p-2 border rounded-md';
+        li.innerHTML = `<div class="text-sm font-medium">${b.id} — ${b.name}</div><div class="text-xs text-gray-500">${b.date} • ${b.type.toUpperCase()} • ${b.status}</div>`;
+        recentBookingsEl.appendChild(li);
+      });
+
+      const recentMessagesEl = document.getElementById('recentMessages');
+      recentMessagesEl.innerHTML = '';
+      sampleMessages.slice(0,5).forEach(m => {
+        const li = document.createElement('li');
+        li.className = 'p-2 border rounded-md';
+        li.innerHTML = `<div class="text-sm font-medium">${m.subject}</div><div class="text-xs text-gray-500">${m.sender} • ${m.time}</div>`;
+        recentMessagesEl.appendChild(li);
+      });
+
+      const recentNotifsEl = document.getElementById('recentNotifs');
+      recentNotifsEl.innerHTML = '';
+      sampleNotifications.forEach(n => {
+        const li = document.createElement('li');
+        li.className = 'text-sm text-gray-600';
+        li.innerText = `${n.text} • ${n.time}`;
+        recentNotifsEl.appendChild(li);
+      });
+
+      // Charts
+      const bookingsCtx = document.getElementById('bookingsChart').getContext('2d');
+      const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+
+      // generate fake last-30-days data
+      const days = 30;
+      const labels = [];
+      const bookingsData = [];
+      const revenueData = [];
+      for (let i = days - 1; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        labels.push(d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }));
+        const b = Math.floor(3 + Math.random() * 12);
+        bookingsData.push(b);
+        revenueData.push(b * (2000 + Math.floor(Math.random()*9000)));
+      }
+
+      // bookings chart
+      new Chart(bookingsCtx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{ label: 'Bookings', data: bookingsData, tension: 0.3, fill: true }]
+        },
+        options: { plugins: { legend: { display: false } }, responsive: true }
+      });
+
+      // revenue chart
+      new Chart(revenueCtx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{ label: 'Revenue', data: revenueData }]
+        },
+        options: { plugins: { legend: { display: false } }, responsive: true }
+      });
+
+      // Generate report button
+      document.getElementById('downloadReportBtn').addEventListener('click', () => {
+        const rows = [['Date', 'Bookings', 'Revenue (INR)']].concat(labels.map((lab, i) => [lab, bookingsData[i], revenueData[i]]));
+        downloadCSV('bookings-revenue-report.csv', rows);
+      });
+    }
+
+    /* ---------------------------
+       Bookings page
+       --------------------------- */
+    function setupBookings() {
+      const tbody = document.getElementById('bookingsTbody');
+      const searchInput = document.getElementById('bookingSearch');
+      const typeFilter = document.getElementById('bookingTypeFilter');
+      const statusFilter = document.getElementById('bookingStatusFilter');
+
+      let data = [...sampleBookings];
+      let sortKey = 'id';
+      let sortDir = 1;
+
+      function render() {
+        const q = searchInput.value.trim().toLowerCase();
+        let filtered = data.filter(row => {
+          if (typeFilter.value !== 'all' && row.type !== typeFilter.value) return false;
+          if (statusFilter.value !== 'all' && row.status !== statusFilter.value) return false;
+          if (!q) return true;
+          return row.id.toLowerCase().includes(q) || row.name.toLowerCase().includes(q);
+        });
+
+        // sort
+        filtered.sort((a,b) => {
+          const A = a[sortKey];
+          const B = b[sortKey];
+          if (sortKey === 'cost') return (A - B) * sortDir;
+          if (sortKey === 'date') return (new Date(A) - new Date(B)) * sortDir;
+          return String(A).localeCompare(String(B)) * sortDir;
+        });
+
+        tbody.innerHTML = '';
+        filtered.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.className = 'border-t';
+          tr.innerHTML = `
+            <td class="px-3 py-3">${r.id}</td>
+            <td class="px-3 py-3 font-medium">${r.name}</td>
+            <td class="px-3 py-3">${r.date}</td>
+            <td class="px-3 py-3">${r.type}</td>
+            <td class="px-3 py-3">
+              <span class="status-pill ${r.status==='confirmed' ? 'bg-green-100 text-green-700' : r.status==='pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">${r.status}</span>
+            </td>
+            <td class="px-3 py-3">${formatINR(r.cost)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // header sorting
+      document.querySelectorAll('#bookingsTable thead th').forEach(th => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.key || 'id';
+          if (sortKey === key) sortDir *= -1;
+          else { sortKey = key; sortDir = 1; }
+          // update arrows UI
+          document.querySelectorAll('#bookingsTable thead th').forEach(h => {
+            if (h.dataset.key === sortKey) h.innerText = h.innerText.replace(/▲|▼/g,'') + (sortDir===1?' ▲':' ▼');
+            else h.innerText = h.innerText.replace(/▲|▼/g,'');
+          });
+          render();
+        });
+      });
+
+      [searchInput, typeFilter, statusFilter].forEach(el => el.addEventListener('input', render));
+      render();
+    }
+
+    /* ---------------------------
+       Customers page
+       --------------------------- */
+    function setupCustomers() {
+      const tbody = document.getElementById('customersTbody');
+      const search = document.getElementById('customerSearch');
+      const cityFilter = document.getElementById('customerCityFilter');
+
+      function render() {
+        const q = search.value.trim().toLowerCase();
+        const city = cityFilter.value;
+        const filtered = sampleCustomers.filter(c => {
+          if (city !== 'all' && c.city !== city) return false;
+          if (!q) return true;
+          return c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q);
+        });
+
+        tbody.innerHTML = '';
+        filtered.forEach(c => {
+          const tr = document.createElement('tr');
+          tr.className = 'border-t';
+          tr.innerHTML = `
+            <td class="px-3 py-3 font-medium">${c.name}</td>
+            <td class="px-3 py-3">${c.email}</td>
+            <td class="px-3 py-3">${c.phone}</td>
+            <td class="px-3 py-3">${c.city}</td>
+            <td class="px-3 py-3"><button data-id="${c.id}" class="viewProfileBtn px-3 py-1 border rounded-md">View</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // attach profile buttons
+        document.querySelectorAll('.viewProfileBtn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const cust = sampleCustomers.find(x => x.id === id);
+            showModal(`
+              <div class="p-4">
+                <h3 class="text-lg font-semibold mb-2">${cust.name}</h3>
+                <div class="text-sm text-gray-600">Email: ${cust.email}</div>
+                <div class="text-sm text-gray-600">Phone: ${cust.phone}</div>
+                <div class="text-sm text-gray-600">City: ${cust.city}</div>
+                <div class="text-sm text-gray-600">Joined: ${cust.joined}</div>
+                <div class="mt-4">
+                  <button id="closeModal" class="px-3 py-2 bg-indigo-600 text-white rounded-md">Close</button>
+                </div>
+              </div>
+            `);
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+          });
+        });
+      }
+
+      search.addEventListener('input', render);
+      cityFilter.addEventListener('input', render);
+      render();
+    }
+
+    /* ---------------------------
+       Messages page
+       --------------------------- */
+    function setupMessages() {
+      const listEl = document.getElementById('messageList');
+      const threadContainer = document.getElementById('messageThreadContainer');
+      const msgSearch = document.getElementById('messageSearch');
+      const replyInput = document.getElementById('replyInput');
+      const sendBtn = document.getElementById('sendReplyBtn');
+      let currentMsg = null;
+
+      function renderList() {
+        const q = msgSearch.value.trim().toLowerCase();
+        listEl.innerHTML = '';
+        sampleMessages.forEach(m => {
+          if (q && !(m.subject + ' ' + m.sender).toLowerCase().includes(q)) return;
+          const li = document.createElement('li');
+          li.className = 'p-2 rounded-md hover:bg-gray-50 cursor-pointer border';
+          li.innerHTML = `<div class="font-medium">${m.subject}</div><div class="text-xs text-gray-500">${m.sender} • ${m.time}</div>`;
+          li.addEventListener('click', () => {
+            openMessage(m.id);
+          });
+          listEl.appendChild(li);
+        });
+      }
+
+      function openMessage(id) {
+        const m = sampleMessages.find(x => x.id === id);
+        currentMsg = m;
+        threadContainer.innerHTML = '';
+        m.thread.forEach(t => {
+          const block = document.createElement('div');
+          block.className = 'mb-3';
+          block.innerHTML = `<div class="text-xs text-gray-500">${t.from} • ${t.time}</div><div class="${t.from==='Support' ? 'bg-indigo-50 p-2 rounded-md inline-block' : 'bg-gray-100 p-2 rounded-md inline-block'} mt-1">${t.text}</div>`;
+          threadContainer.appendChild(block);
+        });
+      }
+
+      sendBtn.addEventListener('click', () => {
+        const text = replyInput.value.trim();
+        if (!text || !currentMsg) return;
+        const now = new Date().toISOString().slice(0,16).replace('T',' ');
+        currentMsg.thread.push({ from: 'Support', text, time: now });
+        replyInput.value = '';
+        openMessage(currentMsg.id);
+      });
+
+      msgSearch.addEventListener('input', renderList);
+
+      renderList();
+    }
+
+    /* ---------------------------
+       Hotels page
+       --------------------------- */
+    function setupHotels() {
+      const tbody = document.getElementById('hotelsTbody');
+      const addBtn = document.getElementById('addHotelBtn');
+
+      function render() {
+        tbody.innerHTML = '';
+        sampleHotels.forEach(h => {
+          const tr = document.createElement('tr');
+          tr.className = 'border-t';
+          tr.innerHTML = `
+            <td class="px-3 py-3 font-medium">${h.name}</td>
+            <td class="px-3 py-3">${h.location}</td>
+            <td class="px-3 py-3">${h.rating.toFixed(1)}</td>
+            <td class="px-3 py-3">
+              <button data-id="${h.id}" class="editHotelBtn px-3 py-1 border rounded-md mr-2">Edit</button>
+              <button data-id="${h.id}" class="deleteHotelBtn px-3 py-1 border rounded-md">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.querySelectorAll('.editHotelBtn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const hotel = sampleHotels.find(h => h.id === id);
+            showModal(`
+              <div class="p-4">
+                <h3 class="text-lg font-semibold mb-2">Edit ${hotel.name}</h3>
+                <input id="editHotelName" class="border rounded-lg px-3 py-2 w-full mt-2" value="${hotel.name}" />
+                <input id="editHotelLocation" class="border rounded-lg px-3 py-2 w-full mt-2" value="${hotel.location}" />
+                <input id="editHotelRating" type="number" step="0.1" min="0" max="5" class="border rounded-lg px-3 py-2 w-full mt-2" value="${hotel.rating}" />
+                <div class="mt-4">
+                  <button id="saveHotelBtn" class="px-3 py-2 bg-indigo-600 text-white rounded-md">Save</button>
+                  <button id="cancelHotelBtn" class="px-3 py-2 ml-2 border rounded-md">Cancel</button>
+                </div>
+              </div>
+            `);
+            document.getElementById('saveHotelBtn').addEventListener('click', () => {
+              hotel.name = document.getElementById('editHotelName').value;
+              hotel.location = document.getElementById('editHotelLocation').value;
+              hotel.rating = parseFloat(document.getElementById('editHotelRating').value) || hotel.rating;
+              closeModal();
+              render();
+            });
+            document.getElementById('cancelHotelBtn').addEventListener('click', closeModal);
+          });
+        });
+
+        document.querySelectorAll('.deleteHotelBtn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const idx = sampleHotels.findIndex(h => h.id === id);
+            if (confirm('Delete this hotel?')) {
+              if (idx >= 0) sampleHotels.splice(idx,1);
+              render();
+            }
+          });
+        });
+      }
+
+      addBtn.addEventListener('click', () => {
+        showModal(`
+          <div class="p-4">
+            <h3 class="text-lg font-semibold mb-2">Add New Hotel</h3>
+            <input id="newHotelName" class="border rounded-lg px-3 py-2 w-full mt-2" placeholder="Hotel name" />
+            <input id="newHotelLocation" class="border rounded-lg px-3 py-2 w-full mt-2" placeholder="Location (city)" />
+            <input id="newHotelRating" type="number" step="0.1" min="0" max="5" class="border rounded-lg px-3 py-2 w-full mt-2" placeholder="Rating e.g. 4.5" />
+            <div class="mt-4">
+              <button id="createHotelBtn" class="px-3 py-2 bg-green-600 text-white rounded-md">Create</button>
+              <button id="cancelHotelCreateBtn" class="px-3 py-2 ml-2 border rounded-md">Cancel</button>
+            </div>
+          </div>
+        `);
+        document.getElementById('createHotelBtn').addEventListener('click', () => {
+          const name = document.getElementById('newHotelName').value.trim();
+          const loc = document.getElementById('newHotelLocation').value.trim();
+          const r = parseFloat(document.getElementById('newHotelRating').value) || 4.0;
+          if (name && loc) {
+            sampleHotels.push({ id: 'H-'+(Math.random()*100000|0), name, location: loc, rating: r });
+            closeModal();
+            render();
+          } else alert('Please fill name and location');
+        });
+        document.getElementById('cancelHotelCreateBtn').addEventListener('click', closeModal);
+      });
+
+      render();
+    }
+
+    /* ---------------------------
+       Payments page
+       --------------------------- */
+    function setupPayments() {
+      const tbody = document.getElementById('paymentsTbody');
+      const txSearch = document.getElementById('txSearch');
+      const statusFilter = document.getElementById('txStatusFilter');
+
+      function render() {
+        const q = txSearch.value.trim().toLowerCase();
+        const st = statusFilter.value;
+        const filtered = samplePayments.filter(p => {
+          if (st !== 'all' && p.status !== st) return false;
+          if (!q) return true;
+          return p.id.toLowerCase().includes(q) || p.customer.toLowerCase().includes(q);
+        });
+
+        tbody.innerHTML = '';
+        filtered.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.className = 'border-t';
+          tr.innerHTML = `
+            <td class="px-3 py-3 font-medium">${p.id}</td>
+            <td class="px-3 py-3">${p.customer}</td>
+            <td class="px-3 py-3">${formatINR(p.amount)}</td>
+            <td class="px-3 py-3">${p.date}</td>
+            <td class="px-3 py-3"><span class="status-pill ${p.status==='success' ? 'bg-green-100 text-green-700' : p.status==='pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">${p.status}</span></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      [txSearch, statusFilter].forEach(el => el.addEventListener('input', render));
+      render();
+    }
+
+    /* ---------------------------
+       Analytics page
+       --------------------------- */
+    function setupAnalytics() {
+      const bookingsCtx = document.getElementById('analyticsBookingsChart').getContext('2d');
+      const revenueCtx = document.getElementById('analyticsRevenueChart').getContext('2d');
+
+      function generate(days) {
+        const labels = [];
+        const bookings = [];
+        const revenue = [];
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          labels.push(d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }));
+          const b = Math.floor(2 + Math.random() * 10);
+          bookings.push(b);
+          revenue.push(b * (2000 + Math.floor(Math.random()*8000)));
+        }
+        return { labels, bookings, revenue };
+      }
+
+      const data30 = generate(30);
+      new Chart(bookingsCtx, { type: 'line', data: { labels: data30.labels, datasets: [{ label: 'Bookings', data: data30.bookings, tension: 0.3 }] }, options: { plugins: { legend: { display: false } } }});
+      new Chart(revenueCtx, { type: 'bar', data: { labels: data30.labels, datasets: [{ label: 'Revenue', data: data30.revenue }] }, options: { plugins: { legend: { display: false } }}});
+
+      document.getElementById('downloadAnalyticsBtn').addEventListener('click', () => {
+        const rows = [['Date','Bookings','Revenue']];
+        data30.labels.forEach((l,i) => rows.push([l, data30.bookings[i], data30.revenue[i]]));
+        downloadCSV('analytics-30days.csv', rows);
+      });
+    }
+
+    /* ---------------------------
+       Feedback page
+       --------------------------- */
+    function setupFeedback() {
+      const list = document.getElementById('feedbackList');
+      const search = document.getElementById('feedbackSearch');
+
+      function render() {
+        const q = search.value.trim().toLowerCase();
+        list.innerHTML = '';
+        sampleFeedback.filter(f => !q || (f.name + ' ' + f.comment).toLowerCase().includes(q)).forEach(f => {
+          const li = document.createElement('li');
+          li.className = 'border p-3 rounded-md';
+          li.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="font-medium">${f.name}</div>
+                <div class="text-xs text-gray-400">${f.time}</div>
+              </div>
+              <div class="text-sm text-gray-600">⭐ ${f.rating}</div>
+            </div>
+            <div class="mt-2 text-sm text-gray-700">${f.comment}</div>
+            <div class="mt-3">
+              <textarea data-id="${f.id}" class="replyBox border rounded-md w-full px-3 py-2" placeholder="Type reply..."></textarea>
+              <div class="mt-2">
+                <button data-id="${f.id}" class="replyBtn px-3 py-2 bg-indigo-600 text-white rounded-md">Reply</button>
+              </div>
+              <div class="mt-2 repliesArea text-sm text-gray-600"></div>
+            </div>
+          `;
+          list.appendChild(li);
+        });
+
+        document.querySelectorAll('.replyBtn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const box = document.querySelector('.replyBox[data-id="'+id+'"]');
+            const txt = box.value.trim();
+            if (!txt) return alert('Type a reply');
+            const fb = sampleFeedback.find(x => x.id === id);
+            fb.replies.push({ from: 'Support', text: txt, time: new Date().toISOString().slice(0,10) });
+            box.value = '';
+            render();
+          });
+        });
+      }
+
+      search.addEventListener('input', render);
+      render();
+    }
+
+    /* ---------------------------
+       Settings
+       --------------------------- */
+    function setupSettings() {
+      document.getElementById('saveProfileBtn').addEventListener('click', () => {
+        alert('Profile saved (simulated).');
+      });
+      document.getElementById('changePassBtn').addEventListener('click', () => {
+        alert('Password changed (simulated).');
+      });
+    }
+
+    /* ---------------------------
+       Notifications page
+       --------------------------- */
+    function setupNotifications() {
+      const list = document.getElementById('notificationsList');
+      function render() {
+        list.innerHTML = '';
+        sampleNotifications.forEach(n => {
+          const li = document.createElement('li');
+          li.className = 'flex items-start justify-between border p-2 rounded-md';
+          li.innerHTML = `<div><div class="text-sm">${n.text}</div><div class="text-xs text-gray-400">${n.time}</div></div><div><button data-id="${n.id}" class="markReadBtn text-xs px-2 py-1 border rounded-md">Mark read</button></div>`;
+          list.appendChild(li);
+        });
+
+        document.querySelectorAll('.markReadBtn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const idx = sampleNotifications.findIndex(x => x.id === id);
+            if (idx >= 0) sampleNotifications.splice(idx, 1);
+            render();
+          });
+        });
+      }
+
+      document.getElementById('markAllReadBtn').addEventListener('click', () => {
+        if (confirm('Mark all notifications as read?')) sampleNotifications.length = 0;
+        setupNotifications(); // re-render and attach
+        navigateTo('notifications');
+      });
+
+      render();
+    }
+
+    /* ---------------------------
+       Modals
+       --------------------------- */
+    function showModal(html) {
+      const root = document.getElementById('modalRoot');
+      root.innerHTML = `
+        <div id="modalOverlay" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div class="bg-white rounded-lg shadow-lg w-full max-w-xl mx-4">
+            ${html}
+          </div>
+        </div>
+      `;
+      document.getElementById('modalOverlay').addEventListener('click', (e) => {
+        if (e.target.id === 'modalOverlay') closeModal();
+      });
+    }
+    function closeModal() { document.getElementById('modalRoot').innerHTML = ''; }
+
+    /* ---------------------------
+       Global search (simple)
+       --------------------------- */
+    document.getElementById('globalSearch').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const q = e.target.value.trim().toLowerCase();
+        // Try navigate to bookings if matches ID pattern
+        if (/^bk-/.test(q) || q.startsWith('bk')) {
+          navigateTo('bookings');
+          setTimeout(()=>{ const s = document.getElementById('bookingSearch'); if (s) { s.value = q.toUpperCase(); s.dispatchEvent(new Event('input')); } }, 100);
+          return;
+        }
+        // otherwise go to customers and search
+        navigateTo('customers');
+        setTimeout(()=>{ const s = document.getElementById('customerSearch'); if (s) { s.value = q; s.dispatchEvent(new Event('input')); } }, 120);
+      }
+    });
+
+    /* ---------------------------
+       Initialize notifications count
+       --------------------------- */
+    function updateMenuBadges() {
+      // messages badge
+      document.querySelectorAll('.menu-item').forEach(btn => {
+        const id = btn.dataset.id;
+        const badgeSpan = btn.querySelector('.menu-badge');
+        if (id === 'messages') badgeSpan.innerText = sampleMessages.length || '';
+        if (id === 'notifications') badgeSpan.innerText = sampleNotifications.length || '';
+      });
+      document.getElementById('notifDot').innerText = sampleNotifications.length || '';
+    }
+    updateMenuBadges();
+
+    // highlight first menu item on load
+    document.querySelector('.menu-item').classList.add('bg-indigo-50');
+
+  </script>
+</body>
+</html>
