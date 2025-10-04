@@ -18,7 +18,8 @@
 
     <link rel="stylesheet" href="style.css" />
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=API_HIDDEN&libraries=places"></script>
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAs7MIblmVA3jPVNXyNZKup4vG1LNZTygk&libraries=places&callback=initAutocomplete">
+        </script>
 
     <script src="/js/gtranslate.js"></script>
     <script>
@@ -37,19 +38,17 @@
         <div class="navbar-container">
             <div class="navbar-logo-group">
                 <div class="logo-icon-container">
-                    <i data-feather="compass" class="logo-icon"></i>
+                    <img class="logo-icon" src="/assets/logo-3.png" alt="">
                 </div>
                 <span class="logo-text">Desh<span class="logo-highlight">Yatra</span></span>
             </div>
             <div class="navbar-links">
-                <a href="#" class="navbar-link">Home</a>
                 <a href="#" class="navbar-link">Destinations</a>
                 <a href="#" class="navbar-link">Experiences</a>
                 <a href="#" class="navbar-link">Deals</a>
-                <a href="#" class="navbar-link">About</a>
             </div>
             <div class="navbar-actions custom-translate notranslate" id="customTranslateRoot">
-                <button id="translateToggle" class="translate-btn" aria-haspopup="listbox" aria-expanded="false">🌐
+                <button id="translateToggle" class="translate-btn" aria-haspopup="listbox" aria-expanded="false"><i data-feather="globe"></i>
                     <i data-feather="chevron-down" class="language-icon"></i></button>
 
                 <div id="translateDropdown" class="dropdown hidden notranslate" role="dialog"
@@ -57,7 +56,7 @@
                     <!-- Current language (filled by JS) -->
                     <div id="currentLang" class="current-lang" role="status" aria-live="polite">
                         <div class="current-left">
-                            <div class="tick" aria-hidden="true">✓</div>
+                            <div class="tick" aria-hidden="true"><i data-feather="check"></i></div>
                             <div class="current-text" id="currentText">English (English)</div>
                         </div>
                         <div class="current-code" id="currentCode">en</div>
@@ -75,12 +74,22 @@
             <!-- Hidden Google Translate element -->
             <div id="google_translate_element" style="display:none"></div>
 
-            <button class="sign-in-button">Sign In</button>
+            <button class="sign-in-button" onclick="openPopup()">Sign In</button>
             <button class="mobile-menu-button">
                 <i data-feather="menu"></i>
             </button>
         </div>
     </nav>
+
+    <div id="loginPopup" class="popup-overlay">
+        <div class="popup-box">
+            <h2>Login As</h2>
+            <button class="btn-customer"><i data-feather="user"></i>Traveller</button>
+            <button class="btn-admin" onclick="location.href='/admin/login/'"><i data-feather="shield"></i>Admin (Click to try)</button>
+            <button class="btn-guide"><i data-feather="compass"></i>Local Guide</button>
+            <button class="btn-close" onclick="closePopup()"><i data-feather="x"></i></button>
+        </div>
+    </div>
 
     <section class="hero-section">
         <div class="hero-content">
@@ -93,8 +102,8 @@
 
             <div class="search-form-container" data-aos="fade-up" data-aos-delay="200">
                 <form action="" id="quickForm" class="search-form-grid">
-                    <input id="boarding" type="text" placeholder="Where do you want to go?" class="search-input">
-                    <input id="destination" type="text" placeholder="From where?" class="search-input">
+                    <input id="destination" type="text" placeholder="Where do you want to go?" class="search-input">
+                    <input id="boarding" type="text" placeholder="From where?" class="search-input">
                     <input id="date" type="date" class="search-input" placeholder="When?">
                     <button id="goBtn" class="search-button">
                         Go
@@ -421,6 +430,76 @@
                     <div class="culture-content">
                         <h3 class="culture-title">Literature</h3>
                         <p class="culture-description">Epics, poetry, and contemporary works</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="app-cta-section">
+        <div class="section-container">
+            <div class="app-cta-content">
+                <div class="app-cta-text" data-aos="fade-right">
+                    <h2 class="app-cta-title">Desh<span class="cursive-text blue-text">Yatra</span> Mobile App</h2>
+                    <p class="app-cta-subtitle">All the power of our AI travel assistant in your pocket. Plan trips, get
+                        real-time updates, and access your itinerary offline.</p>
+
+                    <div class="app-features-list">
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon blue-bg">
+                                <i data-feather="check" class="icon-small"></i>
+                            </div>
+                            <div>
+                                <h4 class="app-feature-title">Plan trip in 27 Languages</h4>
+                                <p class="app-feature-description">Plan your trip in Hindi, Tamil, Bengali, or other
+                                    Indian languages</p>
+                            </div>
+                        </div>
+
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon blue-bg">
+                                <i data-feather="check" class="icon-small"></i>
+                            </div>
+                            <div>
+                                <h4 class="app-feature-title">Offline Itinerary Access</h4>
+                                <p class="app-feature-description">Your travel plans available even without internet</p>
+                            </div>
+                        </div>
+
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon blue-bg">
+                                <i data-feather="check" class="icon-small"></i>
+                            </div>
+                            <div>
+                                <h4 class="app-feature-title">Exclusive App-Only Deals</h4>
+                                <p class="app-feature-description">Save up to 20% on bookings made through the app</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="app-store-links">
+                        <a href="#" class="app-store-link">
+                            <i data-feather="apple" class="app-store-icon"></i>
+                            <div>
+                                <div class="app-store-text">Download on the</div>
+                                <div class="app-store-name">App Store</div>
+                            </div>
+                        </a>
+                        <a href="#" class="app-store-link">
+                            <i data-feather="play" class="app-store-icon"></i>
+                            <div>
+                                <div class="app-store-text">Get it on</div>
+                                <div class="app-store-name">Google Play</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="app-screenshot-container" data-aos="fade-left">
+                    <div class="app-screenshot-tilt"></div>
+                    <div class="app-screenshot-frame">
+                        <img src="http://static.photos/technology/640x360/401" alt="App Screens"
+                            class="app-screenshot-image">
                     </div>
                 </div>
             </div>
