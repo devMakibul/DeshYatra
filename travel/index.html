@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DeshYatra - Travel Plan</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAs7MIblmVA3jPVNXyNZKup4vG1LNZTygk&libraries=places"></script>
+    <script src="/js/gtranslate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                autoDisplay: 'true',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+            }, 'google_translate_element');
+        }
+    </script>
+</head>
+
+<body class="main-body">
+    <nav class="main-nav-bar">
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="nav-logo-group">
+                    <div class="logo-wrapper">
+                        <img class="logo-image" src="/assets/logo-1.jpeg" alt="Logo">
+                        <span class="logo-text">DeshYatra</span>
+                    </div>
+                    <div class="main-menu-desktop">
+                        <a href="/" class="nav-link nav-link-active">Home</a>
+                        <a href="#" class="nav-link nav-link-inactive">Experiences</a>
+                        <a href="#" class="nav-link nav-link-inactive">Hotels</a>
+                        <a href="#" class="nav-link nav-link-inactive">Events</a>
+                    </div>
+                </div>
+                <div class="nav-buttons-desktop">
+                    <button class="btn btn-login">Login</button>
+                    <button class="btn btn-signup">Sign
+                        Up</button>
+                </div>
+                <div class="mobile-menu-toggle-wrapper">
+                    <button type="button" class="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false"
+                        id="mobile-menu-button">
+                        <span class="sr-only">Open main menu</span>
+                        <i data-feather="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mobile-menu-dropdown" id="mobile-menu">
+            <div class="mobile-menu-items">
+                <a href="#" class="mobile-nav-link-active">Home</a>
+                <a href="#" class="mobile-nav-link-inactive">Experiences</a>
+                <a href="#" class="mobile-nav-link-inactive">Hotels</a>
+                <a href="#" class="mobile-nav-link-inactive">Events</a>
+                <div class="mobile-auth-section">
+                    <div class="mobile-auth-buttons">
+                        <button class="btn btn-login-mobile">Login</button>
+                        <button class="btn btn-signup-mobile">Sign
+                            Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="main-section-content">
+        <div class="card-primary">
+            <h2 class="section-title">Journey Details</h2>
+            <div class="form-grid-4">
+                <div class="form-group">
+                    <label class="form-label">Boarding from</label>
+                    <input type="text" id="fromInput" placeholder="Starting point" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Destination</label>
+                    <input type="text" id="toInput" placeholder="Destination" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" id="dateInput" class="form-input">
+                </div>
+                <div class="search-button-container">
+                    <button onclick="searchTransport()" class="btn btn-gradient-search">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="main-section-content padding-bottom" id="resultsSection" style="display: none;">
+        <div class="card-primary overflow-hidden">
+            <div class="tab-header-container">
+                <button class="tab-button tab-style tab-button-hover active" onclick="showTab('flights')">
+                    ✈️ Flights
+                </button>
+                <button class="tab-button tab-style tab-button-hover" onclick="showTab('trains')">
+                    🚆 Trains
+                </button>
+                <button class="tab-button tab-style tab-button-hover" onclick="showTab('buses')">
+                    🚌 Buses
+                </button>
+                <button class="tab-button tab-style tab-button-hover" onclick="showTab('hotels')">
+                    🏨 Hotels
+                </button>
+                <button class="tab-button tab-style tab-button-hover" onclick="showTab('map')">
+                    🗺️ Map
+                </button>
+                <button class="tab-button tab-style tab-button-hover" onclick="showTab('tourist')">
+                    🏛️ Tourist Attractions
+                </button>
+            </div>
+
+            <div class="card-content-padding">
+                <div id="flights" class="tab-content active">
+                    <h3 class="tab-content-title">Available Flights</h3>
+                    <div id="flightsResults" class="content-spacing-y-4"></div>
+                </div>
+                <div id="trains" class="tab-content">
+                    <h3 class="tab-content-title">Available Trains</h3>
+                    <div id="trainsResults" class="content-spacing-y-4"></div>
+                </div>
+                <div id="buses" class="tab-content">
+                    <h3 class="tab-content-title">Available Buses</h3>
+                    <div id="busesResults" class="content-spacing-y-4"></div>
+                </div>
+                <div id="hotels" class="tab-content">
+                    <h3 class="tab-content-title">Hotels Near Destination</h3>
+                    <div id="hotelsResults" class="results-grid-2"></div>
+                </div>
+                <div id="map" class="tab-content">
+                    <h3 class="tab-content-title">Destination Map</h3>
+                    <div class="map-container-wrapper">
+                        <div id="mapContainer" style="height: 400px; width: 100%;" class="map-container-style">
+                            <div class="map-placeholder">
+                                <div class="text-center">
+                                    <div class="map-emoji">🗺️</div>
+                                    <p>Map will appear here after searching for a destination</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="map-controls">
+                            <button onclick="showTrafficLayer()" class="btn btn-map-toggle-traffic">
+                                Toggle Traffic
+                            </button>
+                            <button onclick="showSatelliteView()" class="btn btn-map-toggle-satellite">
+                                Satellite View
+                            </button>
+                            <button onclick="findNearbyPlaces()" class="btn btn-map-find-nearby">
+                                Nearby Places
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="tourist" class="tab-content">
+                    <h3 class="tab-content-title">Popular Tourist Attractions</h3>
+                    <div class="filter-controls-container">
+                        <div class="filter-buttons-scroll-wrapper">
+                            <button onclick="filterTouristPlaces('all')"
+                                class="filter-btn btn-filter-default btn-filter-active">
+                                All
+                            </button>
+                            <button onclick="filterTouristPlaces('historical')" class="filter-btn btn-filter-default">
+                                Historical
+                            </button>
+                            <button onclick="filterTouristPlaces('religious')" class="filter-btn btn-filter-default">
+                                Religious
+                            </button>
+                            <button onclick="filterTouristPlaces('nature')" class="filter-btn btn-filter-default">
+                                Nature
+                            </button>
+                            <button onclick="filterTouristPlaces('entertainment')"
+                                class="filter-btn btn-filter-default">
+                                Entertainment
+                            </button>
+                        </div>
+                    </div>
+                    <div id="touristResults" class="tourist-grid-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-primary margin-y-8 overflow-hidden">
+            <div class="ai-info-header">
+                <div class="ai-info-header-content">
+                    <h3 class="section-title-small">AI Travel Info</h3>
+                    <button onclick="getTravelSuggestions()" class="btn btn-ai-suggestion">
+                        Get Luggage Suggestions & Events
+                    </button>
+                </div>
+                <div id="geminiLoading" class="loading-container hidden">
+                    <div class="spinner">
+                    </div>
+                    <p class="loading-text">Fetching smart suggestions using AI...</p>
+                </div>
+            </div>
+
+            <div class="ai-info-content-grid">
+                <div id="packingSuggestionSection" class="info-section-card hidden">
+                    <h4 class="info-section-title">📦 Packing Suggestions</h4>
+                    <ul id="packingList" class="packing-list-style">
+                    </ul>
+                </div>
+
+                <div id="eventsCalendarSection" class="info-section-card hidden">
+                    <h4 class="info-section-title">🗓️ Events of the Month</h4>
+                    <div id="eventsList" class="content-spacing-y-3">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="trip-plan-card-wrapper">
+            <div class="trip-plan-card">
+                <h1 class="trip-plan-title">
+                    Plan Your Trip
+                </h1>
+
+                <div class="content-spacing-y-4">
+                    <input type="number" id="budgetInput" placeholder="Budget (₹)" class="form-input-plan">
+                    <input type="number" id="adultsInput" placeholder="Adults" class="form-input-plan">
+                    <input type="number" id="childrenInput" placeholder="Children" class="form-input-plan">
+                </div>
+
+                <button onclick="getTripPlan()" class="btn btn-get-trip-plan">
+                    ✈️ Get AI Trip Plan
+                </button>
+
+                <div id="tripPlanSection" class="trip-plan-results-container hidden">
+                    <h2 class="trip-plan-results-title">
+                        Your AI-Generated Trip Plan
+                    </h2>
+                    <div id="tripPlanContent" class="trip-plan-content-box">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="card-primary margin-y-8 overflow-hidden">
+            <div id="weatherSection" class="info-section-card-weather hidden">
+                <h3 class="section-title-small-weather">Weather Forecast</h3>
+                <div id="weatherInfo">
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <div class="fab-container">
+        <button onclick="openChat()" class="fab-button">
+            <i data-feather="message-circle" class="icon-medium"></i>
+        </button>
+    </div>
+
+    <div id="chatModal" class="chat-modal-overlay hidden flex">
+        <div class="chat-modal-content">
+            <div class="chat-modal-header">
+                <h3 class="chat-modal-title">Travel Assistant</h3>
+                <button onclick="closeChat()" class="chat-modal-close-btn">&times;</button>
+            </div>
+            <div id="chatHistory" class="chat-history-area">
+                <div class="chat-placeholder-text">How can I help with your trip?</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Type a message..." class="chat-input-field">
+                <button onclick="sendMessage()" class="btn chat-send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function () {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                feather.replace();
+            } else {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Initialize feather icons
+        feather.replace();
+    </script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="/travel/travel.js"></script>
+</body>
+
+</html>

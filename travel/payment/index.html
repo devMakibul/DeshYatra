@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg text-center">
+        <h1 class="text-3xl font-bold mb-6">Complete Your Payment</h1>
+        <div id="paymentSummary" class="border border-gray-300 rounded-lg p-4 mb-6 bg-gray-50 text-left">
+            </div>
+
+        <div class="space-y-4">
+            <h2 class="text-xl font-semibold text-gray-700">Choose a Payment Method</h2>
+
+            <div class="payment-option p-4 border rounded-lg hover:shadow-md cursor-pointer transition-shadow bg-blue-50 border-blue-300">
+                <h3 class="font-semibold text-blue-800">Debit Card</h3>
+                <div class="mt-2 hidden">
+                    <input type="text" placeholder="Card Number" class="w-full p-2 border rounded mb-2">
+                    <input type="text" placeholder="Card Holder Name" class="w-full p-2 border rounded mb-2">
+                    <div class="flex space-x-2">
+                        <input type="text" placeholder="Expiry Date (MM/YY)" class="flex-1 p-2 border rounded">
+                        <input type="text" placeholder="CVV" class="w-20 p-2 border rounded">
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-option p-4 border rounded-lg hover:shadow-md cursor-pointer transition-shadow bg-green-50 border-green-300">
+                <h3 class="font-semibold text-green-800">UPI ID</h3>
+                <div class="mt-2 hidden">
+                    <input type="text" placeholder="Enter UPI ID (e.g., username@bank)" class="w-full p-2 border rounded">
+                </div>
+            </div>
+
+            <div class="payment-option p-4 border rounded-lg hover:shadow-md cursor-pointer transition-shadow bg-yellow-50 border-yellow-300">
+                <h3 class="font-semibold text-yellow-800">QR Code Scan</h3>
+                <div class="mt-2 hidden">
+                    <p class="text-sm text-gray-600 mb-2">Scan the QR code below using your UPI app.</p>
+                    <div class="flex justify-center p-4">
+                        <img src="https://via.placeholder.com/200" alt="QR Code" class="rounded-lg border">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="paidBtn" class="mt-8 px-10 py-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600 transition-colors">PAID</button>
+    </div>
+
+    <script src="payment.js"></script>
+</body>
+</html>
