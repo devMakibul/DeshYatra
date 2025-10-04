@@ -32,7 +32,7 @@ async function callOpenRouter(model, messages, responseFormat = 'text') {
         {
             headers: {
                 "Authorization": `Bearer ${AI_API_KEY}`,
-                "HTTP-Referer": "http://localhost:3000",
+                "HTTP-Referer": "https://deshyatra.vercel.app",
                 "X-Title": "Travel Assistant App",
                 "Content-Type": "application/json",
             },
